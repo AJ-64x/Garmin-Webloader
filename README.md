@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.svg" alt="Garmin Webloader: load Connect IQ apps onto your Garmin, right from your browser." width="100%">
+</p>
+
 # Garmin Webloader
 
 Load Connect IQ apps (`.prg` files) onto your Garmin straight from your browser. No installs, no drivers.

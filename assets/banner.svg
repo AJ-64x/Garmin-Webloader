@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="t d">
+  <title id="t">Garmin Webloader</title>
+  <desc id="d">Load Connect IQ apps onto your Garmin from your browser.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#04060d"/><stop offset="1" stop-color="#0a0f26"/>
+    </linearGradient>
+    <radialGradient id="gi" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4238c8" stop-opacity=".55"/><stop offset="1" stop-color="#4238c8" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gt" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0e7088" stop-opacity=".5"/><stop offset="1" stop-color="#0e7088" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#782c8c" stop-opacity=".35"/><stop offset="1" stop-color="#782c8c" stop-opacity="0"/></radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#9cc4ff"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fbaff"/><stop offset="1" stop-color="#6ea8ff"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="clip"><rect width="1280" height="320" rx="0"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect width="1280" height="320" fill="url(#bg)"/>
+    <circle cx="150" cy="20" r="330" fill="url(#gi)"/>
+    <circle cx="1180" cy="330" r="340" fill="url(#gt)"/>
+    <circle cx="640" cy="170" r="220" fill="url(#gp)"/>
+
+    <!-- stars -->
+    <g fill="#afc8ff">
+      <circle cx="80" cy="60" r="1.6" opacity=".8"/><circle cx="240" cy="30" r="1.1" opacity=".6"/>
+      <circle cx="420" cy="290" r="1.4" opacity=".7"/><circle cx="560" cy="40" r="1.2" opacity=".5"/>
+      <circle cx="760" cy="285" r="1.5" opacity=".7"/><circle cx="880" cy="36" r="1.1" opacity=".6"/>
+      <circle cx="1010" cy="296" r="1.3" opacity=".6"/><circle cx="1200" cy="50" r="1.7" opacity=".8"/>
+      <circle cx="340" cy="52" r="1" opacity=".5"/><circle cx="690" cy="300" r="1" opacity=".5"/>
+      <circle cx="1130" cy="140" r="1.2" opacity=".6"/><circle cx="44" cy="250" r="1.3" opacity=".6"/>
+    </g>
+
+    <!-- glass panel -->
+    <rect x="48" y="44" width="1184" height="232" rx="30" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".16" stroke-width="1.5"/>
+    <rect x="78" y="45.5" width="420" height="1.5" fill="url(#shine)"/>
+
+    <!-- text -->
+    <g font-family="'Plus Jakarta Sans','Segoe UI','Helvetica Neue',Arial,sans-serif">
+      <text x="100" y="146" font-size="68" font-weight="800" fill="url(#title)" letter-spacing="-2">Garmin Webloader</text>
+      <text x="102" y="192" font-size="25" fill="#9aa7c0">Load Connect IQ apps onto your Garmin, right from your browser.</text>
+      <g font-size="17" fill="#c9d6ee">
+        <rect x="102" y="214" width="76" height="32" rx="16" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".18"/><text x="140" y="235" text-anchor="middle">Browser</text>
+        <rect x="190" y="214" width="82" height="32" rx="16" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".18"/><text x="231" y="235" text-anchor="middle">Android</text>
+        <rect x="284" y="214" width="76" height="32" rx="16" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".18"/><text x="322" y="235" text-anchor="middle">Python</text>
+        <rect x="372" y="214" width="66" height="32" rx="16" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".18"/><text x="405" y="235" text-anchor="middle">Node</text>
+        <rect x="450" y="214" width="98" height="32" rx="16" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".18"/><text x="499" y="235" text-anchor="middle">Monkey C</text>
+      </g>
+    </g>
+
+    <!-- watch -->
+    <g transform="translate(1068 160)">
+      <rect x="-34" y="-112" width="68" height="224" rx="26" fill="#fff" fill-opacity=".06" stroke="#fff" stroke-opacity=".14"/>
+      <circle r="78" fill="#0b1230" stroke="#ffffff" stroke-opacity=".35" stroke-width="4"/>
+      <circle r="66" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+      <path d="M-34 -52 A66 66 0 0 1 8 -66" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g stroke="url(#accent)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M0 -32 V16"/><path d="M-20 -4 L0 18 L20 -4"/>
+      </g>
+      <rect x="-28" y="30" width="56" height="4" rx="2" fill="#6ea8ff" fill-opacity=".9"/>
+      <text y="56" text-anchor="middle" font-family="'JetBrains Mono',Consolas,monospace" font-size="15" fill="#9aa7c0">.prg</text>
+      <rect x="76" y="-12" width="8" height="24" rx="3" fill="#fff" fill-opacity=".25"/>
+    </g>
+  </g>
+</svg>
