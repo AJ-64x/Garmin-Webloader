@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#04060d">
+<title>Garmin Webloader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --text:#f1f5fb; --muted:#9aa7c0; --edge:rgba(255,255,255,.13); --glass:rgba(255,255,255,.025);
+  --panel:rgba(255,255,255,.045); --row:rgba(255,255,255,.055); --field:rgba(0,0,0,.38);
+  --accent:#6ea8ff; --accent-ink:#07142b; --ok:#6ee7a8; --err:#ff8590; --warn:#ffc46b;
+  --bg:radial-gradient(50% 50% at 50% 0%,rgba(60,70,150,.18),transparent 70%);
+  --base:#04060d;
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --text:#14213d; --muted:#51607f; --edge:rgba(20,33,61,.15); --glass:rgba(255,255,255,.4);
+  --panel:rgba(255,255,255,.6); --row:rgba(255,255,255,.7); --field:rgba(255,255,255,.75);
+  --accent:#2f6df6; --accent-ink:#fff; --ok:#12804a; --err:#c62839; --warn:#9a6200;
+  --bg:radial-gradient(40% 40% at 15% 12%,rgba(110,168,255,.55),transparent 70%),
+       radial-gradient(45% 45% at 90% 22%,rgba(190,150,255,.45),transparent 70%),
+       radial-gradient(50% 50% at 60% 98%,rgba(120,220,210,.4),transparent 70%);
+  --base:#e9eefb;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-height:100vh;color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;background:var(--bg),var(--base);background-attachment:fixed}
+button,input{font:inherit}
+.scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.aur{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(90px);will-change:transform}
+.a1{left:-22vmax;top:-30vmax;background:radial-gradient(circle,rgba(66,56,200,.5),transparent 65%);animation:da 40s ease-in-out infinite alternate}
+.a2{right:-28vmax;bottom:-34vmax;background:radial-gradient(circle,rgba(14,112,136,.45),transparent 65%);animation:db 48s ease-in-out infinite alternate}
+.a3{left:30vw;top:35vh;width:40vmax;height:40vmax;background:radial-gradient(circle,rgba(120,40,140,.28),transparent 65%);animation:dc 56s ease-in-out infinite alternate}
+@keyframes da{to{transform:translate(32vw,26vh) scale(1.2)}}
+@keyframes db{to{transform:translate(-34vw,-22vh) scale(.85)}}
+@keyframes dc{to{transform:translate(-24vw,-18vh) scale(1.3)}}
+.scene::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.6) 100%)}
+#sky{position:absolute;inset:0;width:100%;height:100%}
+:root[data-theme="light"] .scene{display:none}
+@media (prefers-reduced-motion:reduce){.aur{animation:none}}
+.card{position:relative;z-index:1;min-height:100vh;width:100%;padding:40px 20px 32px;display:flex;align-items:center;justify-content:center;background:var(--glass);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);backdrop-filter:blur(28px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.28)}
+.col{width:min(920px,100%)}
+
+/* header */
+.top{display:flex;align-items:center;gap:14px;margin:0 4px 20px}
+.top .grow{flex:1}
+h1{margin:0;font-size:2rem;font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.sub{margin:6px 0 0;color:var(--muted);font-size:.96rem}
+
+/* the one box */
+.box{background:var(--panel);border:1px solid var(--edge);border-radius:26px;padding:28px 30px;box-shadow:0 12px 40px rgba(0,0,0,.16)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.cols > .step{min-width:0}
+.cols > .step + .step{border-left:1px solid var(--edge);padding-left:30px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:16px;min-height:28px}
+.n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:.82rem;display:grid;place-items:center}
+.step.ok .n{background:var(--ok);color:#06251a}
+.ph h2{margin:0;font-size:1.05rem;font-weight:600}
+.ph .state{margin-left:auto;font-size:.84rem;color:var(--muted);text-align:right;word-break:break-word}
+.step.ok .state{color:var(--ok)}
+
+/* buttons */
+button{color:var(--text);background:var(--row);border:1px solid var(--edge);border-radius:12px;padding:9px 15px;font-weight:550;cursor:pointer}
+button:hover:not(:disabled){background:var(--field)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.sm{padding:5px 11px;font-size:.82rem;border-radius:9px}
+button.go{min-width:230px;padding:14px 28px;font-size:1.02rem;font-weight:700;background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.go:hover:not(:disabled){filter:brightness(1.08);background:var(--accent)}
+button.danger{color:var(--err)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)} .small{font-size:.84rem}
+label.opt{display:flex;gap:9px;align-items:center;font-size:.92rem;cursor:pointer}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+code{font-family:var(--mono)}
+
+/* column 1: files */
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:170px;border:1.5px dashed var(--edge);border-radius:18px;padding:20px 16px;text-align:center;cursor:pointer;background:var(--row)}
+.drop.over{border-color:var(--accent);background:var(--field)}
+.drop .big{font-weight:600;font-size:1.02rem}
+.list{display:grid;gap:8px;margin-top:12px;max-height:210px;overflow:auto}
+.item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:var(--row);border:1px solid var(--edge)}
+.item .nm{flex:1;min-width:0;font-weight:550;word-break:break-all;font-size:.92rem}
+.item .sz{color:var(--muted);font-size:.8rem;white-space:nowrap}
+.badge{font-size:.7rem;font-weight:650;padding:2px 8px;border-radius:99px;border:1px solid var(--warn);color:var(--warn);white-space:nowrap}
+
+/* column 2: watch */
+.placeholder{display:flex;align-items:center;justify-content:center;text-align:center;min-height:118px;margin-top:12px;border:1.5px dashed var(--edge);border-radius:18px;padding:16px;color:var(--muted);font-size:.92rem;line-height:1.5}
+.info{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;font-size:.9rem;margin:16px 0 0}
+.info dt{color:var(--muted)} .info dd{margin:0;word-break:break-all}
+.sec{margin:16px 0 8px;font-size:.76rem;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.empty{color:var(--muted);font-size:.9rem}
+#apps{max-height:150px}
+
+/* load bar */
+.load{margin-top:26px;padding-top:24px;border-top:1px solid var(--edge)}
+.loadrow{display:flex;gap:16px 24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.opts{display:flex;gap:10px 22px;flex-wrap:wrap}
+.prog{height:6px;border-radius:9px;background:var(--field);margin-top:18px;overflow:hidden;visibility:hidden}
+.prog.show{visibility:visible}
+.prog i{display:block;height:100%;width:0;background:var(--accent)}
+.status{margin-top:14px;font-size:.9rem;color:var(--muted);min-height:1.4em;word-break:break-word}
+.status.ok{color:var(--ok)} .status.err{color:var(--err)} .status.warn{color:var(--warn)}
+details.logbox{margin-top:10px}
+details.logbox summary{cursor:pointer;color:var(--muted);font-size:.84rem;width:max-content}
+#log{margin-top:10px;font-family:var(--mono);font-size:.78rem;line-height:1.55;background:var(--field);border:1px solid var(--edge);border-radius:12px;padding:10px 12px;height:140px;overflow:auto}
+#log .ln{white-space:pre-wrap;word-break:break-word;color:var(--muted)}
+#log .ln.ok{color:var(--ok)} #log .ln.err{color:var(--err)} #log .ln.warn{color:var(--warn)}
+#log time{opacity:.6;margin-right:8px}
+
+/* tip (Android) + touch screens */
+.tip{display:flex;gap:14px;align-items:flex-start;margin:0 0 16px;padding:14px 16px;border:1px solid var(--edge);border-radius:16px;background:var(--panel);font-size:.9rem;line-height:1.55;color:var(--muted)}
+.tip b{color:var(--text)}
+.tip button{margin-left:auto;flex:none}
+@media (pointer:coarse){button{min-height:44px}button.sm{min-height:38px}label.opt{min-height:36px}}
+
+/* footer */
+.foot{margin:18px 0 0;text-align:center;font-size:.82rem;color:var(--muted)}
+.credit{margin-top:12px;text-align:center}
+.credit a{display:inline-flex;align-items:center;gap:7px;color:var(--text);text-decoration:none;font-size:.85rem;padding:6px 13px;border-radius:99px;border:1px solid var(--edge);background:var(--row)}
+.credit svg{width:15px;height:15px;fill:currentColor}
+a{color:var(--accent)}
+
+@media (max-width:760px){
+  .box{padding:22px 18px}
+  .cols{grid-template-columns:1fr;gap:0}
+  .cols > .step + .step{border-left:0;padding-left:0;margin-top:24px;padding-top:24px;border-top:1px solid var(--edge)}
+  button.go{width:100%}
+  .loadrow{flex-direction:column;align-items:stretch}
+}
+
+/* full-screen unsupported */
+#blocked{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;padding:28px;
+  background:radial-gradient(40% 40% at 15% 15%,rgba(255,110,130,.4),transparent 70%),radial-gradient(45% 45% at 88% 80%,rgba(167,120,255,.35),transparent 70%),var(--base)}
+body.unsupported #blocked{display:flex}
+body.unsupported main.card{display:none}
+.bk{max-width:560px}
+.bk h2{margin:0;font-size:clamp(1.9rem,7vw,3rem);font-weight:700;letter-spacing:-.03em}
+.bk p{font-size:1.05rem;line-height:1.6;margin:16px 0 0}
+.bk .why{color:var(--muted);font-size:.95rem;margin-top:8px}
+.bk .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px}
+.bk .chips span{border:1px solid var(--edge);background:var(--panel);border-radius:99px;padding:5px 13px;font-size:.85rem}
+.bk .seen{margin-top:20px;font-size:.82rem;color:var(--muted)}
+.bk .ask{margin-top:22px;font-size:.85rem;color:var(--muted)}
+.bk .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="scene" aria-hidden="true"><div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div><canvas id="sky"></canvas></div>
+
+<main class="card"><div class="col">
+
+  <div class="top">
+    <div class="grow">
+      <h1>Garmin Webloader</h1>
+      <p class="sub">Got a Connect IQ app? Drop it in, choose your Garmin, and we’ll load it for you.</p>
+    </div>
+    <button class="sm" id="theme" title="Switch between light and dark">Light</button>
+  </div>
+
+  <div class="tip" id="androidTip" hidden>
+    <div><b>Using an Android phone?</b> Open this in Chrome 132 or newer and plug your Garmin in with a USB cable (some phones need an OTG adapter). Tap Allow if the phone asks. When you choose your Garmin, open its <b>GARMIN</b> folder, tap “Use this folder”, then “Allow”.</div>
+    <button class="sm" id="tipOk">Got it</button>
+  </div>
+
+  <div class="box">
+    <div class="cols">
+
+      <!-- 1 FILES -->
+      <section class="step" id="p1">
+        <div class="ph"><span class="n">1</span><h2>Files</h2><span class="state" id="s1">Nothing yet</span></div>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Add your .prg files">
+          <div class="big">Drop your .prg files here</div>
+          <div class="muted small">or click to choose them from your computer</div>
+          <input type="file" id="prg" accept=".prg" multiple hidden>
+        </div>
+        <div class="list" id="queue"></div>
+        <div class="row" style="margin-top:12px" id="queueTools" hidden>
+          <button class="sm" id="clearQ">Clear all</button>
+        </div>
+      </section>
+
+      <!-- 2 WATCH -->
+      <section class="step" id="p2">
+        <div class="ph"><span class="n">2</span><h2>Watch</h2><span class="state" id="s2">Not connected yet</span></div>
+        <div class="row">
+          <button id="pick">Choose your Garmin</button>
+          <button id="eject" hidden>Eject safely</button>
+          <button id="reconnect" hidden></button>
+          <button class="sm" id="rescan" hidden>Refresh</button>
+          <button class="sm" id="forget" hidden>Forget this one</button>
+        </div>
+        <div class="placeholder" id="wph">Plug in your Garmin, then choose its GARMIN folder (or the whole drive).</div>
+        <div id="watchBox" hidden>
+          <dl class="info" id="info"></dl>
+          <div class="sec">Already on your Garmin</div>
+          <div class="list" id="apps"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3 LOAD -->
+    <section class="step load" id="p3">
+      <div class="ph"><span class="n">3</span><h2>Load</h2><span class="state" id="s3">Not yet</span></div>
+      <div class="loadrow">
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="optVerify" checked> Double-check the copy</label>
+          <label class="opt"><input type="checkbox" id="optConfirm" checked> Ask before overwriting</label>
+        </div>
+        <button class="go" id="send" disabled>Load onto my Garmin</button>
+      </div>
+      <div class="prog" id="prog"><i id="bar"></i></div>
+      <div class="status" id="status"></div>
+      <details class="logbox">
+        <summary>Activity log</summary>
+        <div id="log"></div>
+        <div class="row" style="margin-top:10px;justify-content:flex-end">
+          <button class="sm" id="copyLog">Copy log</button>
+          <button class="sm" id="clearLog">Clear</button>
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <p class="foot">When it’s done, eject your Garmin safely before you unplug it, then look for the new app on the Garmin itself.</p>
+  <p class="foot" id="ovNote" hidden>You skipped the browser check. <a href="#" id="clearOv">Turn it back on</a></p>
+  <div class="credit">
+    <a href="https://github.com/aj-64x" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      by AJ 64 on GitHub
+    </a>
+  </div>
+</div></main>
+
+<section id="blocked" role="alert">
+  <div class="bk">
+    <h2>This browser can’t run Webloader</h2>
+    <p id="bkMsg"></p>
+    <p class="why" id="bkWhy"></p>
+    <div class="chips"><span>Chrome</span><span>Edge</span><span>Opera</span><span>Vivaldi</span><span>Arc</span><span>Brave*</span><span>Chrome for Android</span></div>
+    <div class="seen" id="bkSeen"></div>
+    <div class="ask">Think we got that wrong?</div>
+    <div class="btns">
+      <button id="bkTry" class="go" style="min-width:0;padding:10px 18px">Try anyway</button>
+      <button id="bkCopy">Copy page link</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const $ = s => document.querySelector(s);
+const state = { files: [], watch: null, busy: false, saved: null, ejectMsg: '' };
+const WATCH_HINT = 'Plug in your Garmin, then choose its GARMIN folder (or the whole drive).';
+const CHUNK = 256 * 1024;
+const UA = navigator.userAgent || '';
+const IS_ANDROID = /Android/i.test(UA);
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+
+const fmt = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(b < 10240 ? 1 : 0) + ' KB' : (b / 1048576).toFixed(1) + ' MB';
+const sameName = (a, b) => a.toLowerCase() === b.toLowerCase();
+
+/* ---------- theme ---------- */
+(function(){
+  let t = null;
+  try{ t = localStorage.getItem('webloaderTheme'); }catch(e){}
+  if(!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  const apply = v => { document.documentElement.dataset.theme = v; $('#theme').textContent = v === 'dark' ? 'Light' : 'Dark'; };
+  apply(t);
+  $('#theme').addEventListener('click', () => {
+    t = t === 'dark' ? 'light' : 'dark'; apply(t);
+    try{ localStorage.setItem('webloaderTheme', t); }catch(e){}
+  });
+})();
+
+/* ---------- log ---------- */
+function log(msg, cls){
+  const box = $('#log'), d = document.createElement('div');
+  d.className = 'ln ' + (cls || '');
+  const t = document.createElement('time');
+  t.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  d.append(t, document.createTextNode(msg));
+  box.appendChild(d);
+  while(box.children.length > 200) box.removeChild(box.firstChild);
+  box.scrollTop = box.scrollHeight;
+  const st = $('#status'); st.className = 'status ' + (cls || ''); st.textContent = msg;
+}
+$('#clearLog').addEventListener('click', () => { $('#log').textContent = ''; });
+$('#copyLog').addEventListener('click', async () => {
+  const text = [...$('#log').children].map(n => n.textContent).join('\n');
+  try{ await navigator.clipboard.writeText(text); log('Copied the log.', 'ok'); }catch(e){ log('Couldn’t copy the log.', 'err'); }
+});
+
+/* ---------- saved watch (remembered between visits) ---------- */
+const idb = {
+  open(){ return new Promise((res, rej) => { const r = indexedDB.open('webloader', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
+  async get(k){ const db = await this.open(); return new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+  async set(k, v){ const db = await this.open(); return new Promise((res, rej) => { const q = db.transaction('kv', 'readwrite').objectStore('kv').put(v, k); q.onsuccess = () => res(); q.onerror = () => rej(q.error); }); },
+  async del(k){ const db = await this.open(); return new Promise((res, rej) => { const q = db.transaction('kv', 'readwrite').objectStore('kv').delete(k); q.onsuccess = () => res(); q.onerror = () => rej(q.error); }); }
+};
+
+/* ---------- panels ---------- */
+function paint(){
+  const w = state.watch;
+  $('#p1').classList.toggle('ok', state.files.length > 0);
+  $('#s1').textContent = state.files.length ? state.files.length + (state.files.length === 1 ? ' file' : ' files') + ' · ' + fmt(state.files.reduce((a, f) => a + f.size, 0)) : 'Nothing yet';
+  $('#p2').classList.toggle('ok', !!w);
+  $('#s2').textContent = w ? (w.info && w.info.name ? w.info.name : w.root.name) : 'Not connected yet';
+  const ready = state.files.length > 0 && !!w;
+  $('#p3').classList.toggle('ok', false);
+  $('#s3').textContent = state.busy ? 'Working on it…' : ready ? 'Ready to go' : 'Not yet';
+  $('#send').disabled = !ready || state.busy;
+  $('#rescan').hidden = !w; $('#eject').hidden = !w; $('#forget').hidden = !state.saved && !w;
+  $('#queueTools').hidden = state.files.length === 0;
+}
+
+function renderQueue(){
+  const box = $('#queue'); box.textContent = '';
+  state.files.forEach((f, i) => {
+    const row = document.createElement('div'); row.className = 'item';
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = f.name;
+    row.appendChild(nm);
+    if(state.watch && state.watch.list.some(a => sameName(a.name, f.name))){
+      const b = document.createElement('span'); b.className = 'badge'; b.textContent = 'will replace'; row.appendChild(b);
+    }
+    const sz = document.createElement('span'); sz.className = 'sz'; sz.textContent = fmt(f.size); row.appendChild(sz);
+    const rm = document.createElement('button'); rm.className = 'sm'; rm.textContent = 'Remove';
+    rm.addEventListener('click', () => { state.files.splice(i, 1); renderQueue(); paint(); });
+    row.appendChild(rm);
+    box.appendChild(row);
+  });
+  paint();
+}
+
+function renderWatch(){
+  const w = state.watch;
+  $('#watchBox').hidden = !w;
+  $('#wph').hidden = !!w;
+  $('#wph').textContent = state.ejectMsg || WATCH_HINT;
+  if(!w) return;
+  const info = $('#info'); info.textContent = '';
+  const add = (k, v) => { if(!v) return; const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; info.append(dt, dd); };
+  add('Model', w.info && w.info.name);
+  add('Software', w.info && w.info.version);
+  add('Part number', w.info && w.info.part);
+  add('Folder', w.root.name + (w.garmin ? '' : ' (Apps folder only)'));
+  add('Apps folder', w.apps ? 'Found it' : 'Not there yet. We’ll make it for you.');
+
+  const box = $('#apps'); box.textContent = '';
+  if(!w.list.length){ const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'Nothing installed from a file yet.'; box.appendChild(e); }
+  w.list.forEach(a => {
+    const row = document.createElement('div'); row.className = 'item';
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = a.name;
+    const sz = document.createElement('span'); sz.className = 'sz'; sz.textContent = fmt(a.size) + ' · ' + new Date(a.modified).toLocaleDateString();
+    const rm = document.createElement('button'); rm.className = 'sm danger'; rm.textContent = 'Remove';
+    rm.addEventListener('click', async () => {
+      if(!confirm('Remove ' + a.name + ' from your Garmin?')) return;
+      try{ await w.apps.removeEntry(a.name); log('Removed ' + a.name + ' from your Garmin.', 'warn'); await connect(w.root, true); }
+      catch(e){ log('Couldn’t remove ' + a.name + ': ' + e.message, 'err'); }
+    });
+    row.append(nm, sz, rm); box.appendChild(row);
+  });
+}
+
+/* ---------- watch scanning ---------- */
+async function findDir(parent, name, create){
+  for await (const [n, h] of parent.entries()){
+    if(h.kind === 'directory' && sameName(n, name)) return h;
+  }
+  if(create) return parent.getDirectoryHandle(name, {create: true});
+  throw new Error('No ' + name + ' folder inside ' + parent.name);
+}
+async function readInfo(garmin){
+  try{
+    const fh = await garmin.getFileHandle('GarminDevice.xml');
+    const doc = new DOMParser().parseFromString(await (await fh.getFile()).text(), 'application/xml');
+    const model = doc.getElementsByTagNameNS('*', 'Model')[0] || doc;
+    const q = t => { const el = model.getElementsByTagNameNS('*', t)[0]; return el ? el.textContent.trim() : ''; };
+    return { name: q('Description'), part: q('PartNumber'), version: q('SoftwareVersion') };
+  }catch(e){ return null; }
+}
+async function listApps(apps){
+  const out = [];
+  if(!apps) return out;
+  for await (const [name, h] of apps.entries()){
+    if(h.kind === 'file' && /\.prg$/i.test(name)){ const f = await h.getFile(); out.push({name, size: f.size, modified: f.lastModified}); }
+  }
+  out.sort((a, b) => a.name.localeCompare(b.name));
+  return out;
+}
+async function connect(root, quiet){
+  try{
+    const n = root.name.toLowerCase();
+    let garmin = null, apps = null;
+    if(n === 'apps') apps = root;
+    else if(n === 'garmin') garmin = root;
+    else garmin = await findDir(root, 'GARMIN', false).catch(() => null);
+    if(!apps && garmin) apps = await findDir(garmin, 'Apps', false).catch(() => null);
+    if(!apps && !garmin) throw new Error('We couldn’t find a GARMIN folder inside “' + root.name + '”. Is that your Garmin’s drive?');
+    const info = garmin ? await readInfo(garmin) : null;
+    state.watch = { root, garmin, apps, info, list: await listApps(apps) };
+    state.ejectMsg = '';
+    try{ await idb.set('watch', root); state.saved = root; }catch(e){}
+    if(!quiet){ const c = state.watch.list.length; log('Connected to ' + (info && info.name ? info.name : root.name) + '. ' + (c === 0 ? 'Nothing from a file is on it yet.' : c === 1 ? 'There’s 1 app from a file on it.' : 'There are ' + c + ' apps from files on it.'), 'ok'); }
+    renderWatch(); renderQueue(); showSaved();
+  }catch(e){
+    state.watch = null; renderWatch(); renderQueue();
+    log(e.message, 'err');
+  }
+}
+function showSaved(){
+  const b = $('#reconnect');
+  if(state.saved && !state.watch){ b.hidden = false; b.textContent = 'Reconnect to “' + state.saved.name + '”'; }
+  else b.hidden = true;
+  paint();
+}
+
+$('#pick').addEventListener('click', async () => {
+  if(typeof window.showDirectoryPicker !== 'function'){ log('This browser can’t open folders. Try Chrome or Edge, or copy the file into GARMIN/Apps yourself.', 'err'); return; }
+  try{ await connect(await window.showDirectoryPicker({mode: 'readwrite'})); }
+  catch(e){ if(e.name !== 'AbortError') log('The folder picker was blocked: ' + e.message, 'err'); }
+});
+$('#reconnect').addEventListener('click', async () => {
+  try{
+    const p = await state.saved.requestPermission({mode: 'readwrite'});
+    if(p !== 'granted'){ log('No permission, no problem. Nothing was changed.', 'warn'); return; }
+    await connect(state.saved);
+  }catch(e){ log('Couldn’t reconnect: ' + e.message, 'err'); }
+});
+$('#eject').addEventListener('click', () => {
+  if(state.busy){ log('Hang on until the copy finishes, then try again.', 'warn'); return; }
+  const w = state.watch;
+  const name = w && w.info && w.info.name ? w.info.name : 'your Garmin';
+  const ua = navigator.userAgent || '';
+  let how;
+  if(/Android/i.test(ua)) how = 'On Android, wait for the copy to finish, then unplug the cable. If your phone offers an Eject option for the Garmin (in the notification shade or Settings → Storage), tap that first.';
+  else if(/Windows/i.test(ua)) how = 'On Windows, click the “Safely Remove Hardware” icon in the system tray, or right-click the drive in File Explorer and pick Eject. Then unplug the cable.';
+  else if(/Mac/i.test(ua)) how = 'On a Mac, click the little eject icon next to your Garmin in the Finder sidebar, or drag it to the Trash. Then unplug the cable.';
+  else if(/Linux|CrOS/i.test(ua)) how = 'In your file manager, choose Eject or Safely Remove on the drive. Then unplug the cable.';
+  else how = 'Eject the drive in your file manager, then unplug the cable.';
+  state.watch = null;
+  state.ejectMsg = 'Your Garmin is disconnected from this page. A website can’t eject it for you, so there’s one last step on your computer. ' + how;
+  renderWatch(); renderQueue(); showSaved();
+  log('Disconnected from ' + name + '. Eject it from your computer, then unplug.', 'ok');
+});
+$('#rescan').addEventListener('click', () => { if(state.watch) connect(state.watch.root); });
+$('#forget').addEventListener('click', async () => {
+  try{ await idb.del('watch'); }catch(e){}
+  state.saved = null; state.watch = null; state.ejectMsg = ''; renderWatch(); renderQueue(); showSaved(); log('Okay, forgotten.');
+});
+
+/* ---------- files ---------- */
+function takeFiles(list){
+  let added = 0, skipped = 0;
+  for(const f of list){
+    if(!/\.prg$/i.test(f.name)){ skipped++; continue; }
+    if(f.size === 0){ log(f.name + ' is empty, so we skipped it.', 'warn'); continue; }
+    if(state.files.some(x => x.name === f.name && x.size === f.size)) continue;
+    state.files.push(f); added++;
+  }
+  if(skipped) log('Skipped ' + skipped + (skipped === 1 ? ' file' : ' files') + '. Only .prg files work here.', 'warn');
+  if(added) log('Added ' + added + (added === 1 ? ' file.' : ' files.'));
+  renderQueue();
+}
+const drop = $('#drop');
+drop.addEventListener('click', () => $('#prg').click());
+drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); $('#prg').click(); } });
+$('#prg').addEventListener('change', e => { takeFiles(e.target.files); e.target.value = ''; });
+$('#clearQ').addEventListener('click', () => { state.files = []; renderQueue(); });
+window.addEventListener('dragover', e => { if(e.dataTransfer && [...e.dataTransfer.types].includes('Files')){ e.preventDefault(); drop.classList.add('over'); } });
+window.addEventListener('dragleave', e => { if(!e.relatedTarget) drop.classList.remove('over'); });
+window.addEventListener('drop', e => { if(e.dataTransfer && [...e.dataTransfer.types].includes('Files')){ e.preventDefault(); drop.classList.remove('over'); takeFiles(e.dataTransfer.files); } });
+
+/* ---------- load ---------- */
+const setProg = p => { $('#bar').style.width = Math.round(p * 100) + '%'; };
+async function sameBytes(a, b){
+  const x = new Uint8Array(await a.arrayBuffer()), y = new Uint8Array(await b.arrayBuffer());
+  if(x.length !== y.length) return false;
+  for(let i = 0; i < x.length; i++) if(x[i] !== y[i]) return false;
+  return true;
+}
+async function load(){
+  const w = state.watch;
+  if(state.busy || !w || !state.files.length) return;
+  const replacing = state.files.filter(f => w.list.some(a => sameName(a.name, f.name)));
+  if(replacing.length && $('#optConfirm').checked && !confirm(replacing.map(f => f.name).join(', ') + (replacing.length === 1 ? ' is' : ' are') + ' already on your Garmin. Replace ' + (replacing.length === 1 ? 'it' : 'them') + '?')) return;
+
+  state.busy = true; paint(); setProg(0); $('#prog').classList.add('show');
+  try{
+    let apps = w.apps;
+    if(!apps){
+      if(!w.garmin) throw new Error('There’s no Apps folder to use. Choose the GARMIN folder instead.');
+      apps = await w.garmin.getDirectoryHandle('Apps', {create: true});
+      w.apps = apps; log('Made a new Apps folder on your Garmin.');
+    }
+    const total = state.files.reduce((a, f) => a + f.size, 0); let done = 0;
+    for(const f of state.files){
+      log('Copying ' + f.name + '…');
+      const fh = await apps.getFileHandle(f.name, {create: true});
+      const wr = await fh.createWritable();
+      for(let off = 0; off < f.size; off += CHUNK){
+        const part = f.slice(off, Math.min(off + CHUNK, f.size));
+        await wr.write(part); done += part.size; setProg(done / total);
+      }
+      await wr.close();
+      if($('#optVerify').checked){
+        const back = await fh.getFile();
+        if(back.size !== f.size || !(await sameBytes(back, f))) throw new Error(f.name + ' didn’t copy cleanly. Give it another try.');
+      }
+      log('✓ ' + f.name + ' (' + fmt(f.size) + ')' + ($('#optVerify').checked ? ', checked and good' : ''), 'ok');
+    }
+    setProg(1);
+    log('All done! Press Eject safely, then unplug your Garmin and look for the new app on it.', 'ok');
+    state.files = []; renderQueue();
+    await connect(w.root, true);
+  }catch(e){
+    log('Something went wrong: ' + e.message, 'err');
+  }finally{
+    state.busy = false; paint();
+    setTimeout(() => $('#prog').classList.remove('show'), 1500);
+  }
+}
+$('#send').addEventListener('click', load);
+window.addEventListener('keydown', e => { if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); load(); } });
+
+/* ---------- browser check + override ---------- */
+const OV_KEY = 'webloaderOverride';
+function showOverrideNote(){ $('#ovNote').hidden = false; log('Skipped the browser check. Folder access might not work here.', 'warn'); }
+(function(){
+  if(typeof window.showDirectoryPicker === 'function') return;
+  let forced = false;
+  try{ forced = localStorage.getItem(OV_KEY) === '1'; }catch(e){}
+  if(forced){ showOverrideNote(); return; }
+  const ua = navigator.userAgent || '';
+  const brands = (navigator.userAgentData && navigator.userAgentData.brands || []).map(b => b.brand).join(' ');
+  const chromium = /Chromium|Google Chrome|Microsoft Edge|Opera|Brave/i.test(brands) || (/Chrome\//.test(ua) && !/CriOS|FxiOS/.test(ua));
+  const mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  let msg, why;
+  if(navigator.brave){ msg = 'Brave has folder access turned off.'; why = 'Open brave://flags/#file-system-access-api, switch it to Enabled, restart Brave, and refresh this page.'; }
+  else if(/iPhone|iPad|iPod/i.test(ua)){ msg = 'iPhones and iPads can’t do this.'; why = 'Browsers on iOS can’t write to folders. Use an Android phone with Chrome, or a Windows, Mac or Linux computer.'; }
+  else if(IS_ANDROID && /SamsungBrowser/i.test(ua)){ msg = 'Samsung Internet can’t open folders.'; why = 'Open this page in Chrome for Android (version 132 or newer) instead.'; }
+  else if(IS_ANDROID){ msg = 'This browser doesn’t have folder access on Android.'; why = 'Chrome for Android 132 or newer does. Update Chrome, or open this page there.'; }
+  else if(chromium){ msg = 'This browser can’t open folders.'; why = 'It might be out of date or locked down. Try updating it, or use the latest Chrome or Edge.'; }
+  else { msg = 'This browser can’t save files to folders.'; why = 'Garmin Webloader needs a Chromium-based browser on a computer, like Chrome or Edge. Firefox and Safari don’t support this yet.'; }
+  $('#bkMsg').textContent = msg; $('#bkWhy').textContent = why;
+  $('#bkSeen').textContent = 'Here’s what we saw: ' + (chromium ? 'a Chromium-based browser' : 'a browser that isn’t Chromium-based') + (mobile ? ' on a phone or tablet' : ' on a computer');
+  $('#bkCopy').addEventListener('click', async () => {
+    try{ await navigator.clipboard.writeText(location.href); $('#bkCopy').textContent = 'Copied! Paste it into Chrome or Edge.'; }
+    catch(e){ $('#bkCopy').textContent = 'Couldn’t copy. Grab it from the address bar instead.'; }
+  });
+  $('#bkTry').addEventListener('click', () => {
+    try{ localStorage.setItem(OV_KEY, '1'); }catch(e){}
+    document.body.classList.remove('unsupported'); showOverrideNote();
+  });
+  document.body.classList.add('unsupported');
+})();
+$('#clearOv').addEventListener('click', e => {
+  e.preventDefault();
+  try{ localStorage.removeItem(OV_KEY); }catch(err){}
+  location.reload();
+});
+
+/* ---------- background: slow drifting stars ---------- */
+(function(){
+  const cv = $('#sky'), ctx = cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0, P = [];
+  function seed(){
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    P = [];
+    const n = Math.round(W * H / 14000);
+    for(let i = 0; i < n; i++) P.push({x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.3 + .3, v: Math.random() * .12 + .03, a: Math.random() * .5 + .2, t: Math.random() * 6.28, d: (Math.random() - .5) * .05});
+  }
+  function frame(t){
+    ctx.clearRect(0, 0, W, H);
+    for(const p of P){
+      if(!reduce){ p.y -= p.v; p.x += p.d; }
+      if(p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+      if(p.x < -4) p.x = W + 4; else if(p.x > W + 4) p.x = -4;
+      const a = p.a * (.55 + .45 * Math.sin(t / 1600 + p.t));
+      ctx.fillStyle = 'rgba(175,200,255,' + a.toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+    }
+    if(!reduce) requestAnimationFrame(frame);
+  }
+  addEventListener('resize', () => { seed(); if(reduce) frame(0); });
+  seed(); requestAnimationFrame(frame);
+})();
+
+/* ---------- phones and tablets ---------- */
+(function(){
+  if(IS_TOUCH){
+    $('#drop .big').textContent = 'Tap to add your .prg files';
+    $('#drop .small').textContent = 'Pick them from your phone’s storage';
+  }
+  // Android’s file chooser can hide files with unfamiliar extensions, so let it show everything
+  if(IS_ANDROID) $('#prg').removeAttribute('accept');
+  let seen = false;
+  try{ seen = localStorage.getItem('webloaderAndroidTip') === '1'; }catch(e){}
+  if(IS_ANDROID && !seen) $('#androidTip').hidden = false;
+  $('#tipOk').addEventListener('click', () => {
+    $('#androidTip').hidden = true;
+    try{ localStorage.setItem('webloaderAndroidTip', '1'); }catch(e){}
+  });
+})();
+
+/* ---------- start ---------- */
+(async function(){
+  try{ state.saved = (await idb.get('watch')) || null; }catch(e){ state.saved = null; }
+  renderQueue(); renderWatch(); showSaved();
+  log(IS_TOUCH ? 'Hi! Add a .prg file, then choose your Garmin. When the folder picker opens, open GARMIN and tap “Use this folder”.' : 'Hi! Drop in a .prg file and choose your Garmin to get started.');
+})();
+</script>
+</body>
+</html>
