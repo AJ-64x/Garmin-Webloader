@@ -1,0 +1,18 @@
+<settings>
+    <setting propertyKey="@Properties.Theme" title="@Strings.ThemeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.ThemeOcean</listEntry>
+            <listEntry value="1">@Strings.ThemeSunset</listEntry>
+            <listEntry value="2">@Strings.ThemeMint</listEntry>
+            <listEntry value="3">@Strings.ThemeGraphite</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.Field" title="@Strings.FieldTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.FieldCalories</listEntry>
+            <listEntry value="1">@Strings.FieldDistance</listEntry>
+            <listEntry value="2">@Strings.FieldFloors</listEntry>
+            <listEntry value="3">@Strings.FieldMessages</listEntry>
+        </settingConfig>
+    </setting>
+</settings>

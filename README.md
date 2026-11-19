@@ -22,10 +22,30 @@ Needs the browser’s folder-access feature:
 
 Firefox, Safari, Samsung Internet and iPhones/iPads can’t do it.
 
+## No browser? Use the command line
+
+Same job, no browser needed. Both do the same things and need nothing installed beyond Python or Node.
+
+```bash
+# Python 3.8+
+python3 cli/webloader.py app.prg          # load a file onto your Garmin
+python3 cli/webloader.py list             # see what's already on it
+python3 cli/webloader.py remove app.prg   # take an app off it
+
+# Node 16+
+node cli/webloader.js app.prg
+```
+
+They find your Garmin on their own. If you have more than one plugged in, they ask which. Add `-d PATH` to point at the `GARMIN` folder or drive yourself, `-y` to skip the questions, and `--no-verify` to skip the double-check.
+
+## Example app: a Monkey C watch face
+
+`monkeyc/SimpleFace` is a small watch face written in Monkey C, Garmin’s own language: big time, date, heart rate, steps, battery and one extra field, with a frosted “glass” look. Open the folder in VS Code with Garmin’s Monkey C extension, pick your watch with **Monkey C: Edit Products**, then build it to get a `.prg` to load.
+
 ## Notes
 
 - It doesn’t build apps. Build your `.prg` with the Connect IQ SDK first.
 - Everything happens in your browser. Your files never leave your computer.
 - If your Garmin shows up as a media device instead of a drive, your computer may not expose it to the browser. Copy the file into `GARMIN/Apps` by hand.
 
-By [AJ 64](https://github.com/aj-64x)
+By [AJ 64](https://github.com/aj-64x), built with help from Claude (Anthropic).

@@ -1,0 +1,13 @@
+<strings>
+    <string id="AppName">Simple Face</string>
+    <string id="ThemeTitle">Color theme (color watches)</string>
+    <string id="ThemeOcean">Ocean</string>
+    <string id="ThemeSunset">Sunset</string>
+    <string id="ThemeMint">Mint</string>
+    <string id="ThemeGraphite">Graphite</string>
+    <string id="FieldTitle">Extra field</string>
+    <string id="FieldCalories">Calories</string>
+    <string id="FieldDistance">Distance</string>
+    <string id="FieldFloors">Floors climbed</string>
+    <string id="FieldMessages">Notifications</string>
+</strings>
