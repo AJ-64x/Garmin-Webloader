@@ -1,0 +1,11 @@
+name: I have an idea
+description: Suggest something that would make this better
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+      description: Tell us what you're trying to do and how this would help.
+    validations:
+      required: true

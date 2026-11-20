@@ -3,11 +3,8 @@
   <desc id="d">Load Connect IQ apps onto your Garmin from your browser.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#04060d"/><stop offset="1" stop-color="#0a0f26"/>
+      <stop offset="0" stop-color="#161719"/><stop offset="1" stop-color="#1d1e21"/>
     </linearGradient>
-    <radialGradient id="gi" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4238c8" stop-opacity=".55"/><stop offset="1" stop-color="#4238c8" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gt" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0e7088" stop-opacity=".5"/><stop offset="1" stop-color="#0e7088" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#782c8c" stop-opacity=".35"/><stop offset="1" stop-color="#782c8c" stop-opacity="0"/></radialGradient>
     <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#9cc4ff"/>
     </linearGradient>
@@ -22,19 +19,6 @@
 
   <g clip-path="url(#clip)">
     <rect width="1280" height="320" fill="url(#bg)"/>
-    <circle cx="150" cy="20" r="330" fill="url(#gi)"/>
-    <circle cx="1180" cy="330" r="340" fill="url(#gt)"/>
-    <circle cx="640" cy="170" r="220" fill="url(#gp)"/>
-
-    <!-- stars -->
-    <g fill="#afc8ff">
-      <circle cx="80" cy="60" r="1.6" opacity=".8"/><circle cx="240" cy="30" r="1.1" opacity=".6"/>
-      <circle cx="420" cy="290" r="1.4" opacity=".7"/><circle cx="560" cy="40" r="1.2" opacity=".5"/>
-      <circle cx="760" cy="285" r="1.5" opacity=".7"/><circle cx="880" cy="36" r="1.1" opacity=".6"/>
-      <circle cx="1010" cy="296" r="1.3" opacity=".6"/><circle cx="1200" cy="50" r="1.7" opacity=".8"/>
-      <circle cx="340" cy="52" r="1" opacity=".5"/><circle cx="690" cy="300" r="1" opacity=".5"/>
-      <circle cx="1130" cy="140" r="1.2" opacity=".6"/><circle cx="44" cy="250" r="1.3" opacity=".6"/>
-    </g>
 
     <!-- glass panel -->
     <rect x="48" y="44" width="1184" height="232" rx="30" fill="#ffffff" fill-opacity=".055" stroke="#ffffff" stroke-opacity=".16" stroke-width="1.5"/>
@@ -56,7 +40,7 @@
     <!-- watch -->
     <g transform="translate(1068 160)">
       <rect x="-34" y="-112" width="68" height="224" rx="26" fill="#fff" fill-opacity=".06" stroke="#fff" stroke-opacity=".14"/>
-      <circle r="78" fill="#0b1230" stroke="#ffffff" stroke-opacity=".35" stroke-width="4"/>
+      <circle r="78" fill="#121316" stroke="#ffffff" stroke-opacity=".35" stroke-width="4"/>
       <circle r="66" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
       <path d="M-34 -52 A66 66 0 0 1 8 -66" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>
       <g stroke="url(#accent)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">

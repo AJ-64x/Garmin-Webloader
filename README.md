@@ -4,52 +4,91 @@
 
 # Garmin Webloader
 
-Load Connect IQ apps (`.prg` files) onto your Garmin straight from your browser. No installs, no drivers.
+Put apps on your Garmin without installing anything. Drop in a `.prg` file, pick your Garmin, press one button.
 
-**Use it:** https://aj-64x.github.io/Garmin-Webloader/
+<p align="center">
+  <a href="https://aj-64x.github.io/Garmin-Webloader/"><b>Open Webloader →</b></a>
+</p>
 
-## How it works
+## Quick start
 
-1. **Files:** drop in your `.prg` file(s).
-2. **Watch:** plug in your Garmin and choose its `GARMIN` folder (or the whole drive). It reads your watch’s model and shows what’s already installed.
-3. **Load:** press the button. It copies the files into `GARMIN/Apps` and can double-check the copy.
+1. **Get a `.prg` file.** That’s a Connect IQ app, watch face, widget or data field. No file yet? [Build one](monkeyc/SimpleFace/README.md) or download one you already have.
+2. **Plug your Garmin into your computer** with its USB cable.
+3. **Open Webloader.** Drop the file in, choose your Garmin’s `GARMIN` folder, and press **Load onto my Garmin**.
+4. Press **Eject safely**, unplug, and look for the new app on your Garmin.
 
-When it’s done, use **Eject safely**, unplug, and look for the new app on your Garmin.
+That’s it. Your files never leave your computer. Everything happens in your browser.
 
-## Browsers
+## Will it work for me?
 
-Needs the browser’s folder-access feature:
+| Where you’re using it | Works? |
+| --- | --- |
+| Chrome, Edge, Opera, Vivaldi or Arc on Windows, Mac or Linux | Yes |
+| Chrome on an Android phone (version 132 or newer) | Yes, with a USB cable (some phones need an OTG adapter) |
+| Brave | Yes, after turning on `brave://flags/#file-system-access-api` |
+| Firefox, Safari, Samsung Internet | No, but the [command line tools](#no-browser-use-the-command-line) below do the same job |
+| iPhone or iPad | No |
 
-- Chrome, Edge, Opera, Vivaldi and Arc on Windows, Mac and Linux
-- Chrome for Android 132 or newer
-- Brave, after turning on `brave://flags/#file-system-access-api`
-
-Firefox, Safari, Samsung Internet and iPhones/iPads can’t do it.
+Your Garmin needs to show up on your computer as a drive with a `GARMIN` folder. Some newer watches connect as a “media device” instead. If yours does, just copy the `.prg` file into `GARMIN/Apps` yourself.
 
 ## No browser? Use the command line
 
-Same job, no browser needed. Both do the same things and need nothing installed beyond Python or Node.
+Same job, no browser. Nothing to install beyond Python or Node.
 
 ```bash
-# Python 3.8+
+# Python 3.8 or newer
 python3 cli/webloader.py app.prg          # load a file onto your Garmin
 python3 cli/webloader.py list             # see what's already on it
 python3 cli/webloader.py remove app.prg   # take an app off it
 
-# Node 16+
+# Node 16 or newer
 node cli/webloader.js app.prg
 ```
 
-They find your Garmin on their own. If you have more than one plugged in, they ask which. Add `-d PATH` to point at the `GARMIN` folder or drive yourself, `-y` to skip the questions, and `--no-verify` to skip the double-check.
+They find your Garmin on their own, and ask which one if you have several plugged in. Handy extras: `-d PATH` points at the `GARMIN` folder yourself, `-y` skips the questions, `--no-verify` skips the double-check.
 
-## Example app: a Monkey C watch face
+## Make your own watch face
 
-`monkeyc/SimpleFace` is a small watch face written in Monkey C, Garmin’s own language: big time, date, heart rate, steps, battery and one extra field, with a frosted “glass” look. Open the folder in VS Code with Garmin’s Monkey C extension, pick your watch with **Monkey C: Edit Products**, then build it to get a `.prg` to load.
+[`monkeyc/SimpleFace`](monkeyc/SimpleFace) is a small watch face written in Monkey C, Garmin’s own language. It shows the time, date, heart rate, steps, battery and one extra field. Its [README](monkeyc/SimpleFace/README.md) walks you through building it, step by step.
 
-## Notes
+## Troubleshooting
 
-- It doesn’t build apps. Build your `.prg` with the Connect IQ SDK first.
-- Everything happens in your browser. Your files never leave your computer.
-- If your Garmin shows up as a media device instead of a drive, your computer may not expose it to the browser. Copy the file into `GARMIN/Apps` by hand.
+<details>
+<summary>It says my browser isn’t supported</summary>
+
+Webloader needs your browser’s folder-access feature. Use Chrome or Edge on a computer, or Chrome 132+ on Android. If you think the check got it wrong, there’s a **Try anyway** button on that screen.
+</details>
+
+<details>
+<summary>The browser won’t let me choose the folder</summary>
+
+Some browsers refuse to open the very top of a drive. Choose the **GARMIN** folder inside it instead. On Android, open the GARMIN folder, then tap “Use this folder” and “Allow”.
+</details>
+
+<details>
+<summary>I can’t see my Garmin at all</summary>
+
+Try a different USB cable (some only charge) and a different USB port. Wait a few seconds after plugging in. If your Garmin shows up as a media device rather than a drive, copy the file into `GARMIN/Apps` by hand.
+</details>
+
+<details>
+<summary>It loaded, but the app isn’t on my Garmin</summary>
+
+Press **Eject safely** and wait for your computer to say it’s safe before unplugging, then restart the Garmin. Make sure the `.prg` was built for your exact model. A file built for a different watch won’t show up.
+</details>
+
+<details>
+<summary>It says there’s no GARMIN folder</summary>
+
+You’ve probably picked the wrong drive. Look for the one named `GARMIN` that contains `Apps`, `Activities` or `GarminDevice.xml`.
+</details>
+
+Still stuck? [Tell us what happened](../../issues/new/choose). It helps to know your Garmin model and browser.
+
+## Helping out
+
+Found a bug or have an idea? [Open an issue](../../issues/new/choose). Pull requests are welcome too. The website is a single file, `index.html`, so it’s easy to read and change.
+
+## Credits
 
 By [AJ 64](https://github.com/aj-64x), built with help from Claude (Anthropic).

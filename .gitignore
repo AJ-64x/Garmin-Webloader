@@ -1,0 +1,12 @@
+# Garmin build output and your private signing key (never share or commit the key)
+bin/
+*.prg
+developer_key*
+*.der
+*.pem
+
+# Editors and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
