@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "garmin-webloader"
+version = "1.0.0"
+description = "Copy Connect IQ .prg apps onto a Garmin plugged in over USB. Command-line companion to the Garmin Webloader website."
+readme = "cli/README.md"
+requires-python = ">=3.8"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "AJ 64" }]
+keywords = ["garmin", "connect-iq", "sideload", "prg", "watch"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+  "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://aj-64x.github.io/Garmin-Webloader/"
+Source = "https://github.com/AJ-64x/Garmin-Webloader"
+Issues = "https://github.com/AJ-64x/Garmin-Webloader/issues"
+
+[project.scripts]
+garmin-webloader = "garmin_webloader.webloader:main"
+
+[tool.setuptools]
+packages = ["garmin_webloader"]
+
+[tool.setuptools.package-dir]
+garmin_webloader = "cli"

@@ -220,7 +220,9 @@ def cmd_remove(args):
             print("Removed " + match.name)
 
 
-def main(argv):
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
     if argv and argv[0] not in COMMANDS and not argv[0].startswith("-"):
         argv = ["load"] + argv  # `webloader.py app.prg` is a shortcut for `load`
     parser = argparse.ArgumentParser(description="Copy Connect IQ .prg files onto a Garmin.")

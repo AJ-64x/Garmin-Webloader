@@ -1,0 +1,14 @@
+{
+  "name": "garmin-webloader",
+  "version": "1.0.0",
+  "description": "Copy Connect IQ .prg apps onto a Garmin plugged in over USB. Command-line companion to the Garmin Webloader website.",
+  "bin": { "garmin-webloader": "cli/webloader.js" },
+  "files": ["cli/webloader.js", "README.md", "LICENSE"],
+  "engines": { "node": ">=16" },
+  "keywords": ["garmin", "connect-iq", "sideload", "prg", "watch", "cli"],
+  "license": "MIT",
+  "author": "AJ 64",
+  "repository": { "type": "git", "url": "git+https://github.com/AJ-64x/Garmin-Webloader.git" },
+  "homepage": "https://aj-64x.github.io/Garmin-Webloader/",
+  "bugs": { "url": "https://github.com/AJ-64x/Garmin-Webloader/issues" }
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>How to put an app on your Garmin from your computer</title>
+<meta name="description" content="A simple guide to sideloading Connect IQ apps onto a Garmin from your computer: where the .prg file goes, how to copy it, and what to do if it doesn't show up.">
+<link rel="canonical" href="https://aj-64x.github.io/Garmin-Webloader/guide/">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Garmin Webloader">
+<meta property="og:title" content="How to put an app on your Garmin from your computer">
+<meta property="og:description" content="Sideload Connect IQ apps onto a Garmin: where the .prg file goes, how to copy it, and what to do if it doesn't show up.">
+<meta property="og:url" content="https://aj-64x.github.io/Garmin-Webloader/guide/">
+<meta property="og:image" content="https://aj-64x.github.io/Garmin-Webloader/assets/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I put apps on a Garmin watch myself?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Connect IQ apps come as .prg files. Copy one into the GARMIN/Apps folder on your Garmin, eject it safely, and the app shows up on the device. This is called sideloading. Most people install from the Connect IQ Store instead, but sideloading is how you use apps you built yourself or got straight from a developer."}}, {"@type": "Question", "name": "Where do I put .prg files on my Garmin?", "acceptedAnswer": {"@type": "Answer", "text": "In the Apps folder inside the GARMIN folder on the device: GARMIN/Apps. If the Apps folder isn't there, create one called Apps."}}, {"@type": "Question", "name": "Why doesn't my Garmin show up as a drive?", "acceptedAnswer": {"@type": "Answer", "text": "Many newer Garmin devices connect to your computer as a media device (MTP) instead of a drive. You can still copy the file by hand: on Windows, open it in File Explorer under This PC. On a Mac, install the free Android File Transfer app. On Linux, your file manager mounts it."}}, {"@type": "Question", "name": "Does Garmin Webloader work on an Android phone?", "acceptedAnswer": {"@type": "Answer", "text": "It can. You need Chrome version 132 or newer and a USB cable, and some phones also need an OTG adapter. When the folder picker opens, open the GARMIN folder and tap Use this folder."}}, {"@type": "Question", "name": "Is it safe? Does it upload my files?", "acceptedAnswer": {"@type": "Answer", "text": "Nothing is uploaded. Garmin Webloader runs entirely in your browser, and your files go straight from your computer to your Garmin. As with any app, only load files from sources you trust."}}, {"@type": "Question", "name": "Where do I get a .prg file?", "acceptedAnswer": {"@type": "Answer", "text": "Apps from the Connect IQ Store are installed for you through Garmin's own tools. A .prg file usually comes from a developer, or you can build your own with the Connect IQ SDK and the Monkey C extension for Visual Studio Code. The Garmin Webloader repository includes a small example you can build."}}, {"@type": "Question", "name": "The app is on my Garmin but I can't find it. What now?", "acceptedAnswer": {"@type": "Answer", "text": "Eject the Garmin safely before unplugging, then restart it. Make sure the .prg was built for your exact model, because a file built for a different device won't appear. Apps show in the app list, watch faces in the watch face picker, and widgets and data fields where you normally add them."}}]}</script>
+<style>
+:root{--base:#f5f5f7;--panel:#fff;--row:#f5f5f7;--text:#1d1d1f;--muted:#6e6e73;--edge:#d2d2d7;--accent:#0071e3;--nav:rgba(245,245,247,.8);--shadow:0 1px 3px rgba(0,0,0,.05),0 10px 36px rgba(0,0,0,.07)}
+@media (prefers-color-scheme:dark){:root{--base:#161617;--panel:#1d1d1f;--row:#2a2a2d;--text:#f5f5f7;--muted:#86868b;--edge:#3a3a3d;--accent:#2997ff;--nav:rgba(22,22,23,.8);--shadow:none}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--base);color:var(--text);font:17px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro Text','Inter','Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;letter-spacing:-.018em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+code{font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace;font-size:.88em;background:var(--row);padding:2px 7px;border-radius:7px}
+nav{position:sticky;top:0;z-index:5;height:52px;display:flex;justify-content:center;background:var(--nav);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--edge)}
+nav div{width:min(760px,100%);padding:0 20px;display:flex;align-items:center;gap:22px;font-size:.84rem}
+nav b{font-size:.95rem;font-weight:600;color:var(--text)} nav .sp{flex:1} nav a{color:var(--text);opacity:.8}
+main{width:min(760px,100%);margin:0 auto;padding:0 20px 72px}
+header{text-align:center;padding:64px 0 36px}
+h1{margin:0;font-size:clamp(2.1rem,6vw,3.2rem);font-weight:700;letter-spacing:-.035em;line-height:1.08}
+.sub{margin:14px auto 0;max-width:600px;font-size:1.25rem;line-height:1.4;color:var(--muted)}
+.btn{display:inline-block;margin-top:26px;background:var(--accent);color:#fff;padding:13px 28px;border-radius:980px;font-weight:500}
+.btn:hover{text-decoration:none;filter:brightness(1.1)}
+section{background:var(--panel);border-radius:26px;padding:30px 32px;margin-top:18px;box-shadow:var(--shadow)}
+h2{margin:0 0 12px;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;line-height:1.15}
+p{margin:0 0 12px} ol,ul{margin:0;padding-left:1.3em} li{margin:0 0 8px}
+.muted{color:var(--muted)}
+details{border-top:1px solid var(--edge);padding:14px 0} details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:600} details p{margin:10px 0 0;color:var(--muted)}
+footer{text-align:center;font-size:.82rem;color:var(--muted);margin-top:30px}
+@media (max-width:600px){section{padding:24px 20px;border-radius:22px}}
+</style>
+</head>
+<body>
+<nav><div><b>Garmin Webloader</b><span class="sp"></span><a href="../">Open the app</a><a href="https://github.com/AJ-64x/Garmin-Webloader" rel="noopener">GitHub</a></div></nav>
+<main>
+<header>
+  <h1>How to put an app on your Garmin</h1>
+  <p class="sub">A simple guide to loading Connect IQ apps onto your Garmin from your computer. No special software needed.</p>
+  <a class="btn" href="../">Open Garmin Webloader</a>
+</header>
+
+<section>
+  <h2>The short version</h2>
+  <p>Connect IQ apps come as <code>.prg</code> files. Put one in the <code>GARMIN/Apps</code> folder on your Garmin, eject it safely, and it appears on the device. That’s called sideloading.</p>
+  <p class="muted">Most people install apps from the Connect IQ Store, and that’s still the easiest way. Sideloading is for apps you built yourself, are testing, or got straight from a developer.</p>
+</section>
+
+<section>
+  <h2>Before you start</h2>
+  <ul>
+    <li>A <code>.prg</code> file made for your exact Garmin model.</li>
+    <li>A USB cable that carries data. Some cables only charge.</li>
+    <li>A computer with Chrome, Edge, Opera, Vivaldi or Arc, or an Android phone with Chrome 132 or newer.</li>
+  </ul>
+  <p class="muted" style="margin-top:12px">Only load files from sources you trust.</p>
+</section>
+
+<section>
+  <h2>Step by step with Garmin Webloader</h2>
+  <ol>
+    <li><a href="../">Open Garmin Webloader</a> in your browser.</li>
+    <li>Drop your <code>.prg</code> file onto the page.</li>
+    <li>Plug in your Garmin and choose its <code>GARMIN</code> folder.</li>
+    <li>Press <b>Load onto my Garmin</b>. It copies the file and double-checks it.</li>
+    <li>Press <b>Eject safely</b>, then unplug your Garmin.</li>
+    <li>Find the new app on your Garmin, in the place you’d expect for what it is.</li>
+  </ol>
+  <p class="muted" style="margin-top:12px">Everything happens in your browser. Nothing is uploaded anywhere.</p>
+</section>
+
+<section>
+  <h2>Or copy it by hand</h2>
+  <ol>
+    <li>Plug your Garmin into your computer.</li>
+    <li>Open it, then open the <code>GARMIN</code> folder, then <code>Apps</code>. Create <code>Apps</code> if it isn’t there.</li>
+    <li>Paste the <code>.prg</code> file in.</li>
+    <li>Eject your Garmin safely, unplug it, and restart it.</li>
+  </ol>
+  <p class="muted" style="margin-top:12px">If your Garmin connects as a media device instead of a drive, find it under This PC in Windows File Explorer. On a Mac, install the free Android File Transfer app.</p>
+</section>
+
+<section>
+  <h2>Questions</h2>
+  <details><summary>Can I put apps on a Garmin watch myself?</summary><p>Yes. Connect IQ apps come as .prg files. Copy one into the GARMIN/Apps folder on your Garmin, eject it safely, and the app shows up on the device. This is called sideloading. Most people install from the Connect IQ Store instead, but sideloading is how you use apps you built yourself or got straight from a developer.</p></details>
+<details><summary>Where do I put .prg files on my Garmin?</summary><p>In the Apps folder inside the GARMIN folder on the device: GARMIN/Apps. If the Apps folder isn&#x27;t there, create one called Apps.</p></details>
+<details><summary>Why doesn&#x27;t my Garmin show up as a drive?</summary><p>Many newer Garmin devices connect to your computer as a media device (MTP) instead of a drive. You can still copy the file by hand: on Windows, open it in File Explorer under This PC. On a Mac, install the free Android File Transfer app. On Linux, your file manager mounts it.</p></details>
+<details><summary>Does Garmin Webloader work on an Android phone?</summary><p>It can. You need Chrome version 132 or newer and a USB cable, and some phones also need an OTG adapter. When the folder picker opens, open the GARMIN folder and tap Use this folder.</p></details>
+<details><summary>Is it safe? Does it upload my files?</summary><p>Nothing is uploaded. Garmin Webloader runs entirely in your browser, and your files go straight from your computer to your Garmin. As with any app, only load files from sources you trust.</p></details>
+<details><summary>Where do I get a .prg file?</summary><p>Apps from the Connect IQ Store are installed for you through Garmin&#x27;s own tools. A .prg file usually comes from a developer, or you can build your own with the Connect IQ SDK and the Monkey C extension for Visual Studio Code. The Garmin Webloader repository includes a small example you can build.</p></details>
+<details><summary>The app is on my Garmin but I can&#x27;t find it. What now?</summary><p>Eject the Garmin safely before unplugging, then restart it. Make sure the .prg was built for your exact model, because a file built for a different device won&#x27;t appear. Apps show in the app list, watch faces in the watch face picker, and widgets and data fields where you normally add them.</p></details>
+</section>
+
+<footer>By <a href="https://github.com/aj-64x" rel="noopener">AJ 64</a> · <a href="../">Garmin Webloader</a></footer>
+</main>
+</body>
+</html>

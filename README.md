@@ -12,6 +12,12 @@
 
 <p align="center">
   <a href="https://aj-64x.github.io/Garmin-Webloader/"><b>Open Webloader</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://aj-64x.github.io/Garmin-Webloader/guide/">Read the guide</a>
+</p>
+
+<p align="center">
+  <img src="assets/demo.gif" width="760" alt="Garmin Webloader in action: add a .prg file, connect your Garmin, and load it.">
 </p>
 
 <br>
@@ -76,10 +82,12 @@ Choose the <code>GARMIN</code> folder inside the drive instead of the drive itse
 Try another USB cable and port. Some newer watches show up as a media device instead of a drive, so copy the file into <code>GARMIN/Apps</code> by hand. After loading, eject safely, restart your Garmin, and make sure the file was built for your exact model.
 </details>
 
+There’s also a [plain-English guide](https://aj-64x.github.io/Garmin-Webloader/guide/) to putting apps on a Garmin.
+
 Still stuck? [Tell us what happened](../../issues/new/choose).
 
 <br>
 
 <p align="center">
-  <sub>By <a href="https://github.com/aj-64x">AJ 64</a>, built with help from Claude.</sub>
+  <sub>By <a href="https://github.com/aj-64x">AJ 64</a>, built with help from Claude. MIT licensed.</sub>
 </p>

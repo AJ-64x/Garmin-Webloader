@@ -5,7 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#161617">
 <meta name="description" content="Load Connect IQ apps onto your Garmin from your browser. Drop a .prg file, choose your Garmin, press Load.">
-<title>Garmin Webloader</title>
+<title>Garmin Webloader: load apps onto your Garmin from your browser</title>
+<link rel="canonical" href="https://aj-64x.github.io/Garmin-Webloader/">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Garmin Webloader">
+<meta property="og:title" content="Garmin Webloader: load apps onto your Garmin from your browser">
+<meta property="og:description" content="Drop a Connect IQ .prg file, choose your Garmin, and press Load. No installs, no drivers.">
+<meta property="og:url" content="https://aj-64x.github.io/Garmin-Webloader/">
+<meta property="og:image" content="https://aj-64x.github.io/Garmin-Webloader/assets/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Garmin Webloader: load apps onto your Garmin from your browser">
+<meta name="twitter:description" content="Drop a Connect IQ .prg file, choose your Garmin, and press Load. No installs, no drivers.">
+<meta name="twitter:image" content="https://aj-64x.github.io/Garmin-Webloader/assets/social-preview.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Garmin Webloader","url":"https://aj-64x.github.io/Garmin-Webloader/","applicationCategory":"UtilitiesApplication","operatingSystem":"Windows, macOS, Linux, Android","browserRequirements":"Requires a Chromium-based browser such as Chrome, Edge, Opera, Vivaldi or Arc","description":"Load Connect IQ apps onto a Garmin from your browser. Drop a .prg file, choose your Garmin, and press Load.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"AJ 64","url":"https://github.com/aj-64x"}}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,10 +77,10 @@ h1{margin:0;font-size:clamp(2.4rem,7vw,3.7rem);font-weight:700;letter-spacing:-.
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .cols > .step{min-width:0}
 .cols > .step + .step{border-left:1px solid var(--edge);padding-left:40px}
-.ph{display:grid;grid-template-columns:1fr auto;column-gap:14px;margin-bottom:22px}
+.ph{display:grid;grid-template-columns:1fr auto;column-gap:14px;margin-bottom:22px;align-items:baseline}
 .n{grid-column:1;font-size:.76rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.ph h2{grid-column:1;margin:3px 0 0;font-size:1.75rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
-.ph .state{grid-column:2;grid-row:1 / span 2;align-self:center;max-width:12rem;font-size:.84rem;color:var(--muted);text-align:right;word-break:break-word}
+.ph h2{grid-column:1 / -1;margin:3px 0 0;font-size:1.75rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.ph .state{grid-column:2;grid-row:1;max-width:14rem;font-size:.84rem;color:var(--muted);text-align:right;word-break:break-word}
 .step.ok .n,.step.ok .state{color:var(--ok)}
 .step.ok .n::after{content:" ✓"}
 
@@ -151,6 +168,7 @@ body.unsupported .gnav,body.unsupported main.card{display:none}
   <div class="in">
     <span class="brand">Garmin Webloader</span>
     <span class="sp"></span>
+    <a href="guide/">Guide</a>
     <a href="https://github.com/AJ-64x/Garmin-Webloader" target="_blank" rel="noopener">GitHub</a>
     <button id="theme" title="Switch between light and dark">Light</button>
   </div>

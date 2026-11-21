@@ -10,3 +10,11 @@ developer_key*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Packaging output
+dist/
+build/
+*.egg-info/
+__pycache__/
+node_modules/
+*.tgz
